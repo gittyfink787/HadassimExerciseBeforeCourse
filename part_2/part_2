@@ -1,0 +1,94 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+namespace targilHadasim;
+class Program
+{
+    /// <summary>
+    /// Returns the number of digits in a given integer.
+    /// </summary>
+    /// <param name="n">A natural number (no validation required).</param>
+    /// <returns>The number of digits in the integer.</returns>
+    static int GetNumLength(int n) => (int)Math.Floor(Math.Log10(n)) + 1;
+    /// <summary>
+    /// Checks whether the given string is a sorted palindrome.
+    /// A sorted palindrome is a palindrome where the first half
+    /// of the characters are in lexicographic order.
+    /// </summary>
+    /// <param name="palindrome">The string to check.</param>
+    /// <returns>True if the string is a sorted palindrome; otherwise, false.</returns>
+    static bool IsSortedPalindrome(String palindrome)
+    {
+        Stack<char> stack = new Stack<char>();
+        char prev = '0';
+        for (int i = 0; i <palindrome.Length; i++)
+        {
+            char curr = palindrome[i];
+            if (i<Math.Ceiling((double)palindrome.Length/2))
+            {
+                if (curr<prev)
+                    return false;
+                if (palindrome.Length%2!=0&&i==palindrome.Length/2)
+                    continue;
+                stack.Push(curr);
+                prev = curr;
+            }
+            else
+            {
+                char mirror = stack.Pop();
+                if (mirror!=curr) return false;
+            }
+        }
+        return true;
+    }
+    /// <summary>
+    /// Reads a sequence of numbers from the user until -1 is entered.
+    /// Calculates and displays the average, the count of positive numbers,
+    /// and the sorted list of numbers in ascending order.
+    /// </summary>
+    static void VariousCalculations()
+    {
+        double num = 0;
+        List<double> nums = new List<double>();
+        Console.WriteLine("Please enter the desired numbers one by one. Finally, enter the number -1.");
+        do
+        {
+            string input = Console.ReadLine();
+
+            if (!Double.TryParse(input, out num))
+            {
+                Console.WriteLine("Invalid input. Please enter a valid number.");
+                continue; 
+            }
+
+            if (num != -1)
+                nums.Add(num);
+
+        } while (num != -1);
+
+        Console.WriteLine($"Average: {nums.Average()}");
+        var positiveNums = nums.Where(x => x >= 0).ToList();
+        Console.WriteLine($"Count of positive numbers: {positiveNums.Count}");
+        var sortedNums = nums.OrderBy(x => x).ToList();
+        Console.WriteLine($"Sorted numbers: {string.Join(", ", sortedNums)}");
+    }
+    /// <summary>
+    /// The main entry point of the program.
+    /// </summary>
+    /// <param name="args">Command-line arguments.</param>
+    static void Main(string[] args)
+    {
+        String[] palindromes = { "abcab", "shs", "ftuutf", "clml", "", "taat", "ahgh", "aba" };
+        //String[] palindromes = {  "ftuutf" };
+        foreach (String s in palindromes)
+        {
+            Console.WriteLine($"{s}: {IsSortedPalindrome(s)}");
+        }
+        VariousCalculations();
+    }
+}
+
+
+
+
